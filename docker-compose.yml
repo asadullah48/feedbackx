@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  feedbackx-gateway:
+    build: .
+    container_name: feedbackx-gateway
+    ports:
+      - "8020:8020"
+    environment:
+      - ENVIRONMENT=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8020/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    restart: always

@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "feedbackx"
+version = "1.0.0"
+description = "FeedbackX: Autonomous Customer Feedback Mining & Market Intelligence Multi-Agent Framework"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "FeedbackX Product Labs", email = "insights@feedbackx.ai" }]
+keywords = ["customer-feedback", "market-intelligence", "absa-sentiment", "roadmap-prioritization", "rice-scoring"]
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn>=0.29.0",
+    "pydantic>=2.7.0",
+    "httpx>=0.27.0",
+    "pyyaml>=6.0.1"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

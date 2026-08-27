@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FeedbackX | Autonomous Customer Feedback Mining & Market Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="glow-sphere glow-rose"></div>
+  <div class="glow-sphere glow-cyan"></div>
+
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <h1>Feedback<span class="gradient-text">X</span></h1>
+          <span class="brand-badge" data-i18n="badgeTitle">Customer Intelligence</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <a href="https://asadullahshafique-devunity.vercel.app" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration:none;">
+          <span>👨‍💻 DevUnity Portfolio</span>
+        </a>
+
+        <div class="live-status">
+          <span class="pulse-dot"></span>
+          <span id="gatewayStatus" data-i18n="statusLive">Review Mining Pipeline Active (:8020)</span>
+        </div>
+
+        <button id="langToggleBtn" class="btn btn-outline btn-sm" onclick="toggleLanguage()">
+          <span id="langLabel">العربية</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <section class="hero-section">
+      <h2 data-i18n="heroTitle">Mining Thousands of Customer Reviews into Prioritized Product Roadmaps</h2>
+      <p data-i18n="heroSubtitle">Eradicate customer churn with ScraperAgent (5+ channel review ingestion), AnalyzerAgent (Aspect-Based Sentiment Analysis), and InsightAgent (automated RICE roadmap prioritization).</p>
+    </section>
+
+    <section class="metrics-grid">
+      <div class="metric-card glass">
+        <span class="metric-label" data-i18n="metric1Label">Reviews Scraped</span>
+        <div class="metric-value gradient-text">1,500+ Items</div>
+        <span class="metric-sub" data-i18n="metric1Sub">App Store, G2 & Trustpilot</span>
+      </div>
+      <div class="metric-card glass">
+        <span class="metric-label" data-i18n="metric2Label">Top Churn Friction</span>
+        <div class="metric-value">RBAC Missing</div>
+        <span class="metric-sub" data-i18n="metric2Sub">88.5% Churn Risk Score</span>
+      </div>
+      <div class="metric-card glass">
+        <span class="metric-label" data-i18n="metric3Label">Top RICE Score</span>
+        <div class="metric-value">94.5 (P0)</div>
+        <span class="metric-sub" data-i18n="metric3Sub">High Strategic ROI</span>
+      </div>
+      <div class="metric-card glass">
+        <span class="metric-label" data-i18n="metric4Label">Churn Reduction</span>
+        <div class="metric-value">-22.7% Churn</div>
+        <span class="metric-sub" data-i18n="metric4Sub">Projected Post-Release</span>
+      </div>
+    </section>
+
+    <section class="studio-section">
+      <div class="section-header">
+        <div>
+          <h3 data-i18n="studioTitle">Customer Intelligence & RICE Roadmap Studio</h3>
+          <p class="section-desc" data-i18n="studioDesc">Aggregate customer review streams, identify feature gaps and pain points, and generate an executive product roadmap.</p>
+        </div>
+      </div>
+
+      <div class="studio-layout">
+        <div class="panel glass">
+          <div class="preset-box">
+            <span class="preset-label" data-i18n="lblPresets">Select Market Intelligence Preset:</span>
+            <div class="preset-buttons" id="scenarioButtons">
+              <!-- JS Rendered -->
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="lblReviewVolume">Review Ingestion Volume</label>
+            <select id="volumeSelect" class="input-control">
+              <option value="500">500 Reviews (Rapid Pulse)</option>
+              <option value="1500" selected>1,500 Reviews (Full Channel Scan)</option>
+              <option value="3000">3,000 Reviews (Enterprise Multi-Product)</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary btn-block" onclick="runFeedbackMining()" id="mineBtn">
+            <span data-i18n="btnExecuteMine">💬 Ingest Reviews & Synthesize RICE Roadmap</span>
+          </button>
+        </div>
+
+        <div class="panel glass output-panel">
+          <div class="panel-header">
+            <span class="panel-title" data-i18n="titleRoadmap">Prioritized Feature Roadmap (RICE Matrix)</span>
+            <span id="csatBadge" class="badge badge-success">CSAT: 4.15 / 5.0</span>
+          </div>
+
+          <div class="pipeline-summary" id="pipelineBar">
+            <span class="pipe-tag">Reviews: 1,500 Analyzed</span>
+            <span class="pipe-tag">Aspects: 4 Clustered</span>
+            <span class="pipe-tag">Top RICE: 94.5</span>
+            <span class="pipe-tag">P0 Items: 2</span>
+          </div>
+
+          <div class="roadmap-container" id="roadmapList">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p style="margin-bottom:6px;"><a href="https://asadullahshafique-devunity.vercel.app" target="_blank" style="color:var(--accent-rose); text-decoration:none; font-weight:600;">← Back to Asadullah Shafique Portfolio (DevUnity)</a></p>
+    <p>© 2026 FeedbackX • Customer Intelligence Framework • <a href="https://github.com/asadullah48/feedbackx" target="_blank">GitHub Repository</a></p>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

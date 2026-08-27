@@ -1,0 +1,11 @@
+apiVersion: v2
+name: feedbackx
+description: Helm chart for FeedbackX Autonomous Customer Feedback Mining Multi-Agent Framework
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - customer-feedback
+  - market-intelligence
+  - absa-sentiment
+  - roadmap-prioritization
