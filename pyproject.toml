@@ -29,5 +29,11 @@ dev = [
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 
+[tool.setuptools.packages.find]
+include = ["feedbackx*"]
+
+[tool.setuptools.package-data]
+feedbackx = ["static/*"]
+
 [tool.vercel]
 entrypoint = "feedbackx.server:app"
