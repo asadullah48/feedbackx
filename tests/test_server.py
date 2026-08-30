@@ -30,3 +30,10 @@ def test_server_generate_intelligence_api():
     data = res.json()
     assert data["total_reviews_analyzed"] == 200
     assert len(data["prioritized_roadmap"]) >= 2
+
+def test_server_llm_status_api():
+    res = client.get("/api/v1/system/llm-status")
+    assert res.status_code == 200
+    data = res.json()
+    assert data["provider"] == "ollama"
+    assert "enabled" in data and "available" in data

@@ -32,6 +32,11 @@
           <span>👨‍💻 DevUnity Portfolio</span>
         </a>
 
+        <div class="live-status" id="llmStatus" title="Free-tier LLM enrichment status">
+          <span class="pulse-dot"></span>
+          <span id="llmStatusLabel">Checking LLM…</span>
+        </div>
+
         <div class="live-status">
           <span class="pulse-dot"></span>
           <span id="gatewayStatus" data-i18n="statusLive">Review Mining Pipeline Active (:8020)</span>
@@ -53,22 +58,22 @@
     <section class="metrics-grid">
       <div class="metric-card glass">
         <span class="metric-label" data-i18n="metric1Label">Reviews Scraped</span>
-        <div class="metric-value gradient-text">1,500+ Items</div>
+        <div class="metric-value gradient-text" id="metricReviews">—</div>
         <span class="metric-sub" data-i18n="metric1Sub">App Store, G2 & Trustpilot</span>
       </div>
       <div class="metric-card glass">
         <span class="metric-label" data-i18n="metric2Label">Top Churn Friction</span>
-        <div class="metric-value">RBAC Missing</div>
-        <span class="metric-sub" data-i18n="metric2Sub">88.5% Churn Risk Score</span>
+        <div class="metric-value" id="metricChurnAspect">—</div>
+        <span class="metric-sub" id="metricChurnScore">Computing...</span>
       </div>
       <div class="metric-card glass">
         <span class="metric-label" data-i18n="metric3Label">Top RICE Score</span>
-        <div class="metric-value">94.5 (P0)</div>
+        <div class="metric-value" id="metricTopRice">—</div>
         <span class="metric-sub" data-i18n="metric3Sub">High Strategic ROI</span>
       </div>
       <div class="metric-card glass">
         <span class="metric-label" data-i18n="metric4Label">Churn Reduction</span>
-        <div class="metric-value">-22.7% Churn</div>
+        <div class="metric-value" id="metricChurnReduction">—</div>
         <span class="metric-sub" data-i18n="metric4Sub">Projected Post-Release</span>
       </div>
     </section>
@@ -121,6 +126,13 @@
             <!-- Rendered by JS -->
           </div>
         </div>
+      </div>
+
+      <div class="panel glass" id="summaryPanel">
+        <div class="panel-header">
+          <span class="panel-title" data-i18n="titleSummary">Executive Strategic Summary</span>
+        </div>
+        <p class="roadmap-body" id="summaryText" style="font-size:0.92rem; line-height:1.7;">Run an analysis to generate a summary.</p>
       </div>
     </section>
   </main>

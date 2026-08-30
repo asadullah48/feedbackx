@@ -1,6 +1,30 @@
-version: '3.8'
-
 services:
+  # Free-tier local LLM (https://ollama.com) — powers the executive-summary enrichment.
+  # No API keys, no per-token billing; everything runs on your own machine.
+  ollama:
+    image: ollama/ollama:latest
+    container_name: feedbackx-ollama
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # One-shot job: pulls the model the first time you run `docker compose up`, then exits.
+  # Subsequent runs are instant since the model is cached in the ollama-data volume.
+  ollama-pull:
+    image: ollama/ollama:latest
+    container_name: feedbackx-ollama-pull
+    depends_on:
+      - ollama
+    volumes:
+      - ollama-data:/root/.ollama
+    entrypoint: ["sh", "-c", "until OLLAMA_HOST=http://ollama:11434 ollama list >/dev/null 2>&1; do sleep 1; done; OLLAMA_HOST=http://ollama:11434 ollama pull llama3.2"]
+    restart: "no"
+
   feedbackx-gateway:
     build: .
     container_name: feedbackx-gateway
@@ -8,9 +32,17 @@ services:
       - "8020:8020"
     environment:
       - ENVIRONMENT=production
+      - FEEDBACKX_ENABLE_LLM=true
+      - FEEDBACKX_OLLAMA_HOST=http://ollama:11434
+      - FEEDBACKX_OLLAMA_MODEL=llama3.2
+    depends_on:
+      - ollama
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8020/healthz"]
       interval: 15s
       timeout: 5s
       retries: 3
     restart: always
+
+volumes:
+  ollama-data:

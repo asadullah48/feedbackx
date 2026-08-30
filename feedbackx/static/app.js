@@ -21,7 +21,12 @@ const TRANSLATIONS = {
     lblPresets: "Select Market Intelligence Preset:",
     lblReviewVolume: "Review Ingestion Volume",
     btnExecuteMine: "💬 Ingest Reviews & Synthesize RICE Roadmap",
-    titleRoadmap: "Prioritized Feature Roadmap (RICE Matrix)"
+    titleRoadmap: "Prioritized Feature Roadmap (RICE Matrix)",
+    titleSummary: "Executive Strategic Summary",
+    llmChecking: "Checking LLM…",
+    llmOff: "Deterministic Mode (LLM Off)",
+    llmActive: "Ollama LLM Active",
+    llmUnreachable: "Ollama Configured (Unreachable)"
   },
   ar: {
     badgeTitle: "استخبارات آراء العملاء",
@@ -41,7 +46,12 @@ const TRANSLATIONS = {
     lblPresets: "اختر سيناريو استخبارات مسبق:",
     lblReviewVolume: "حجم التقييمات المجمعة",
     btnExecuteMine: "💬 تجميع التقييمات وصياغة خارطة RICE",
-    titleRoadmap: "خارطة طريق المزايا ذات الأولوية (نموذج RICE)"
+    titleRoadmap: "خارطة طريق المزايا ذات الأولوية (نموذج RICE)",
+    titleSummary: "الملخص الاستراتيجي التنفيذي",
+    llmChecking: "جارِ التحقق من نموذج اللغة…",
+    llmOff: "الوضع الحتمي (نموذج اللغة متوقف)",
+    llmActive: "نموذج Ollama نشط",
+    llmUnreachable: "تم تفعيل Ollama لكنه غير متاح"
   }
 };
 
@@ -60,9 +70,43 @@ const SCENARIOS = [
   }
 ];
 
+let lastLlmStatus = null;
+
 function init() {
   renderPresets();
+  checkLlmStatus();
   runFeedbackMining();
+}
+
+async function checkLlmStatus() {
+  try {
+    const res = await fetch('/api/v1/system/llm-status');
+    lastLlmStatus = await res.json();
+  } catch (err) {
+    console.error("Error checking LLM status:", err);
+    lastLlmStatus = { enabled: false, available: false, model: null };
+  }
+  renderLlmStatus();
+}
+
+function renderLlmStatus() {
+  const dot = document.querySelector('#llmStatus .pulse-dot');
+  const label = document.getElementById('llmStatusLabel');
+  const t = TRANSLATIONS[currentLang];
+  if (!lastLlmStatus) {
+    label.innerText = t.llmChecking;
+    return;
+  }
+  if (!lastLlmStatus.enabled) {
+    label.innerText = t.llmOff;
+    dot.className = 'pulse-dot muted';
+  } else if (lastLlmStatus.available) {
+    label.innerText = `${t.llmActive} (${lastLlmStatus.model})`;
+    dot.className = 'pulse-dot active';
+  } else {
+    label.innerText = t.llmUnreachable;
+    dot.className = 'pulse-dot';
+  }
 }
 
 function toggleLanguage() {
@@ -77,6 +121,8 @@ function toggleLanguage() {
       el.innerText = TRANSLATIONS[currentLang][key];
     }
   });
+
+  renderLlmStatus();
 }
 
 function renderPresets() {
@@ -122,12 +168,20 @@ async function runFeedbackMining() {
 
 function renderRoadmapResult(data) {
   const bar = document.getElementById('pipelineBar');
+  const topRoadmap = data.prioritized_roadmap[0] || null;
   bar.innerHTML = `
     <span class="pipe-tag">Reviews: ${data.total_reviews_analyzed} Analyzed</span>
     <span class="pipe-tag">Aspects: ${data.aspect_clusters.length} Clustered</span>
-    <span class="pipe-tag">Top RICE: ${data.prioritized_roadmap[0].rice_score}</span>
+    <span class="pipe-tag">Top RICE: ${topRoadmap ? topRoadmap.rice_score : '—'}</span>
     <span class="pipe-tag">P0 Items: ${data.prioritized_roadmap.filter(i => i.urgency_tier === 'P0_IMMEDIATE').length}</span>
   `;
+
+  renderMetrics(data);
+
+  const summaryEl = document.getElementById('summaryText');
+  if (summaryEl) {
+    summaryEl.innerText = data.executive_strategic_summary || '—';
+  }
 
   const container = document.getElementById('roadmapList');
   container.innerHTML = '';
@@ -147,6 +201,25 @@ function renderRoadmapResult(data) {
     `;
     container.appendChild(card);
   });
+}
+
+const TIER_LABELS = { P0_IMMEDIATE: 'P0', P1_NEXT_SPRINT: 'P1', P2_BACKLOG: 'P2' };
+
+function renderMetrics(data) {
+  const topChurnCluster = data.aspect_clusters[0] || null;      // pre-sorted by churn_risk_score desc
+  const topRoadmapItems = data.prioritized_roadmap.slice(0, 3); // pre-sorted by rice_score desc
+  const churnReduction = topRoadmapItems.reduce((sum, i) => sum + i.estimated_churn_reduction_percent, 0);
+
+  setText('metricReviews', `${data.total_reviews_analyzed} Items`);
+  setText('metricChurnAspect', topChurnCluster ? topChurnCluster.aspect_name : 'N/A');
+  setText('metricChurnScore', topChurnCluster ? `${topChurnCluster.churn_risk_score.toFixed(1)}% Churn Risk Score` : 'No churn signal');
+  setText('metricTopRice', topRoadmapItems[0] ? `${topRoadmapItems[0].rice_score} (${TIER_LABELS[topRoadmapItems[0].urgency_tier] || topRoadmapItems[0].urgency_tier})` : 'N/A');
+  setText('metricChurnReduction', `-${churnReduction.toFixed(1)}% Churn`);
+}
+
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
 }
 
 window.addEventListener('DOMContentLoaded', init);

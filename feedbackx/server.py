@@ -8,10 +8,11 @@ from typing import List, Dict, Any
 from feedbackx.core.models import MarketIntelligenceReport, CustomerReviewItem
 from feedbackx.orchestration.feedbackx_engine import FeedbackXEngine
 from feedbackx.core.review_scraper_engine import ReviewScraperEngine
+from feedbackx.core.llm_provider import OllamaProvider
 
 app = FastAPI(
     title="FeedbackX Market Intelligence Gateway",
-    version="1.0.0",
+    version="1.1.0",
     description="Autonomous Customer Feedback Mining & Market Intelligence Multi-Agent Framework"
 )
 
@@ -39,11 +40,22 @@ def serve_dashboard():
 
 @app.get("/healthz")
 def healthz():
-    return {"status": "healthy", "service": "FeedbackX", "version": "1.0.0"}
+    return {"status": "healthy", "service": "FeedbackX", "version": "1.1.0"}
 
 @app.get("/readyz")
 def readyz():
     return {"status": "ready", "market_intelligence_agents_active": 3}
+
+@app.get("/api/v1/system/llm-status")
+def llm_status():
+    """Reports whether free-tier LLM enrichment (Ollama) is active, for UI transparency."""
+    provider = OllamaProvider()
+    return {
+        "enabled": provider.enabled,
+        "provider": "ollama",
+        "model": provider.model,
+        "available": provider.is_available(),
+    }
 
 @app.get("/api/v1/feedback/sample-reviews", response_model=List[CustomerReviewItem])
 def get_sample_reviews(count: int = 10):

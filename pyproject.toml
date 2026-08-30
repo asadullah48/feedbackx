@@ -4,11 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "feedbackx"
-version = "1.0.0"
+version = "1.1.0"
 description = "FeedbackX: Autonomous Customer Feedback Mining & Market Intelligence Multi-Agent Framework"
 readme = "README.md"
 requires-python = ">=3.10"
-authors = [{ name = "FeedbackX Product Labs", email = "insights@feedbackx.ai" }]
+authors = [{ name = "Asadullah Shafique" }]
+license = "Apache-2.0"
 keywords = ["customer-feedback", "market-intelligence", "absa-sentiment", "roadmap-prioritization", "rice-scoring"]
 dependencies = [
     "fastapi>=0.110.0",

@@ -1,0 +1,13 @@
+.git/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+tests/
+README.md
+README.ar.md
+SPEC.md
+helm/
