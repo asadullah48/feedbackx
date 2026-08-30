@@ -2,11 +2,14 @@
 
 **Turns thousands of scattered customer reviews into a churn-risk-ranked, engineering-ready product roadmap — automatically.**
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-feedbackx--hazel.vercel.app-brightgreen.svg)](https://feedbackx-hazel.vercel.app)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-green.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/API-FastAPI-teal.svg)](feedbackx/server.py)
 [![Free-tier LLM: Ollama](https://img.shields.io/badge/LLM-Ollama%20(free%2C%20optional)-orange.svg)](https://ollama.com)
 [![Author](https://img.shields.io/badge/Author-Asadullah%20Shafique-purple.svg)](https://asadullahshafique-devunity.vercel.app)
+
+### 🔗 [**Try the live demo →**](https://feedbackx-hazel.vercel.app)
 
 ![FeedbackX dashboard](docs/dashboard-preview.jpg)
 
@@ -43,7 +46,13 @@ The executive summary can optionally be enriched by [Ollama](https://ollama.com)
 - **Fails soft.** If Ollama isn't running, isn't reachable, or times out, `OllamaProvider` returns `None` and the deterministic summary is used instead — the API never errors because of it. See `feedbackx/core/llm_provider.py` and `tests/test_llm_provider.py`.
 - **Transparent in the UI.** The dashboard's header pill calls `GET /api/v1/system/llm-status` and shows whether enrichment is active, off, or configured-but-unreachable.
 
-## 🚀 Run the live demo
+## 🚀 Try it
+
+### Option 1 — Hosted demo, zero setup
+
+**[feedbackx-hazel.vercel.app](https://feedbackx-hazel.vercel.app)** — deployed straight from this repo's `main` branch on Vercel's free tier. It runs the real ABSA/RICE pipeline against live requests; the executive summary uses the deterministic path since Vercel's serverless functions have no persistent Ollama process to reach (see below for that part running locally).
+
+### Option 2 — Run it yourself, with the LLM enrichment on
 
 The whole stack — API, dashboard, and a real local LLM — runs from one command, no cloud account or API key required.
 
@@ -102,7 +111,7 @@ feedbackx/
 └── server.py                  # FastAPI app
 ```
 
-Also included: a `Dockerfile` + `docker-compose.yml` (app + Ollama, used above) and a Helm chart under `helm/` for a Kubernetes deployment path.
+Also included: a `Dockerfile` + `docker-compose.yml` (app + Ollama, used above), a Helm chart under `helm/` for a Kubernetes deployment path, and `vercel.json` for the hosted demo.
 
 ## Design notes
 
