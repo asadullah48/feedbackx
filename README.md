@@ -118,6 +118,25 @@ Also included: a `Dockerfile` + `docker-compose.yml` (app + Ollama, used above),
 - **Why a synthetic review generator instead of live scraping App Store/G2/Trustpilot?** Those platforms require paid API access or violate their terms of service to scrape directly. `ReviewScraperEngine` generates realistic, reproducible review text instead, so `AnalyzerAgent` and `InsightAgent` have real (if synthetic) text to compute against — the analysis and prioritization logic downstream is genuine, not the ingestion source.
 - **Why a keyword lexicon instead of a heavier NLP model for sentiment?** It keeps the core pipeline dependency-light and instant, with zero inference cost — appropriate for a free-tier project. The optional Ollama layer is the upgrade path for genuinely LLM-generated prose (the executive summary), while the numeric scoring (sentiment, churn risk, RICE) stays deterministic and auditable either way.
 
+## 🤖 Agentic AI Alignment
+
+- **Autonomy** — ScraperAgent → AnalyzerAgent → InsightAgent run end to end
+  from raw review text to a RICE-scored roadmap with no analyst manually
+  triaging the volume.
+- **Resilience** — the numeric scoring (sentiment, churn risk, RICE) stays
+  deterministic and auditable regardless of whether the optional Ollama
+  layer is available; only the executive-summary prose depends on the LLM.
+- **Adaptivity** — swapping the synthetic review generator for a real,
+  licensed data feed only touches `ReviewScraperEngine` — the
+  analysis/prioritization agents downstream don't change.
+
+### Roadmap
+
+- Replace `ReviewScraperEngine`'s synthetic generator with a licensed
+  App Store/G2/Trustpilot data feed once API access is arranged.
+- Expose AnalyzerAgent/InsightAgent as MCP tools so other product-ops
+  agent systems can reuse the churn-risk scoring directly.
+
 ## License
 
 Apache License 2.0 — see [LICENSE](LICENSE).
